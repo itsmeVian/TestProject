@@ -1,4 +1,4 @@
-import { cart } from "../data/cart.js";
+import { cart, addToCart, updateCartQuantity } from "../data/cart.js";
 import { products } from "../data/products.js";
 
 let productHtml = "";
@@ -56,64 +56,7 @@ products.forEach((product) => {
 document.querySelector(".js-product-grid").innerHTML = productHtml;
 document.querySelectorAll(".js-add-to-cart-button").forEach((button, i) => {
   button.addEventListener("click", () => {
-    //This is to trigger the message "added"
-    const addedToCart = document.querySelector(
-      `.js-added-to-cart-${products[i].id}`,
-    );
-
-    if (addedToCart) {
-      addedToCart.classList.add("show");
-      setTimeout(() => {
-        addedToCart.classList.remove("show");
-      }, 2000);
-    }
-
-    // getting cart index
-    let itemIndex = -1;
-
-    cart.forEach((item, index) => {
-      if (item.productName === products[i].name) itemIndex = index;
-    });
-
-    if (itemIndex > -1) {
-      let quantity = cart[itemIndex].quantity;
-
-      // check if select value has a value to know how many items to be added
-      let selectValue = document.querySelector(
-        `.js-select-quantity-value-${products[i].id}`,
-      );
-
-      if (selectValue) quantity += parseInt(selectValue.value);
-      else quantity++;
-
-      cart[itemIndex] = {
-        ...cart[itemIndex],
-        quantity,
-      };
-    } else {
-      let quantity = 1;
-
-      // check if select value has a value to know how many items to be added
-      let selectValue = document.querySelector(
-        `.js-select-quantity-value-${products[i].id}`,
-      );
-
-      if (selectValue) quantity = parseInt(selectValue.value);
-
-      cart.push({
-        id: products[i].id,
-        productName: products[i].name,
-        quantity,
-      });
-    }
-
-    //This is to check/update the number of cart added
-    let cartQuantity = 0;
-
-    cart.forEach((item) => {
-      cartQuantity += item.quantity;
-    });
-
-    document.querySelector(".cart-length").innerHTML = cartQuantity;
+    addToCart(products, i);
+    updateCartQuantity();
   });
 });
