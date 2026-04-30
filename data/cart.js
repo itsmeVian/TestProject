@@ -1,3 +1,9 @@
+export let cart = JSON.parse(localStorage.getItem("cart"));
+
+function saveToStorage() {
+  localStorage.setItem("cart", JSON.stringify(cart));
+}
+
 function addToCart(products, i) {
   //This is to trigger the message "added"
   const addedToCart = document.querySelector(
@@ -15,7 +21,7 @@ function addToCart(products, i) {
   let cartItemIndex = -1;
 
   cart.forEach((cartItem, index) => {
-    if (cartItem.productName === products[i].name) cartItemIndex = index;
+    if (cartItem.productId === products[i].id) cartItemIndex = index;
   });
 
   if (cartItemIndex > -1) {
@@ -44,12 +50,12 @@ function addToCart(products, i) {
     if (selectValue) quantity = parseInt(selectValue.value);
 
     cart.push({
-      id: products[i].id,
-      productName: products[i].name,
+      productId: products[i].id,
       quantity,
     });
   }
-  console.log(cart);
+
+  saveToStorage();
 }
 
 function updateCartQuantity() {
@@ -63,5 +69,11 @@ function updateCartQuantity() {
   document.querySelector(".cart-length").innerHTML = cartQuantity;
 }
 
-export { addToCart, updateCartQuantity };
-export const cart = [];
+function removeToCart(productID) {
+  cart = cart.filter((e) => e.productId != productID);
+
+  saveToStorage();
+  console.log(cart);
+}
+
+export { addToCart, updateCartQuantity, removeToCart };
